@@ -1,12 +1,12 @@
-using dotenv.net;
 using Npgsql;
 using System.Security.Cryptography.X509Certificates;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace WindFormPraktikum9
 {
     public partial class Form1 : Form
     {
-        List<User> users = new List<User>();
+        //List<User> users = new List<User>();
 
         public Form1()
         {
@@ -31,21 +31,35 @@ namespace WindFormPraktikum9
                 return;
             }
 
-            users.Add(new User { Username = username, Password = password });
-            MessageBox.Show("Berhasil Registrasi");
+            //users.Add(new User { Username = username, Password = password });
 
-            HalLogin HalLogin = new HalLogin(users);
+            try
+            {
+                Database db = new Database();
+                var regis = db.Register(username, password);
+
+                if (regis == 1)
+                {
+                    MessageBox.Show("Berhasil Registrasi");
+                }
+                else
+                {
+                    MessageBox.Show("Gagal Registrasi");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            HalLogin HalLogin = new HalLogin();
             this.Hide();
             HalLogin.Show();
         }
     }
 }
 
-public class User
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+
 
 public class Database
 {
@@ -53,15 +67,20 @@ public class Database
 
     public Database()
     {
-        string env = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        //DotEnv.Read();
+        //string env = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        string env = "Host=localhost;Port=5432;Database=praktikum-pbo;Username=postgres;Password=12345";
         conn = new NpgsqlConnection(env);
         conn.Open();
     }
 
-    public bool Register(string username, string password)
+    public int Register(string username, string password)
     {
-        string query = "INSERT INTO users VALUES(username, password)";
+        string query = "INSERT INTO users(username, password) VALUES(@username, @password)";
         NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-        cmd.add
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
+        var register = cmd.ExecuteNonQuery();
+        return register;
     }
 }
