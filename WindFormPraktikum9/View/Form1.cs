@@ -46,28 +46,6 @@ namespace WindFormPraktikum9
                 MessageBox.Show($"Gagal Login {ex}", "Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-
-            ////users.Add(new User { Username = username, Password = password });
-
-            //try
-            //{
-            //    Database db = new Database();
-            //    var regis = db.Register(username, password);
-
-            //    if (regis == 1)
-            //    {
-            //        MessageBox.Show("Berhasil Registrasi");
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Gagal Registrasi");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.ToString());
-            //}
-
             HalLogin HalLogin = new HalLogin();
             this.Hide();
             HalLogin.ShowDialog();
