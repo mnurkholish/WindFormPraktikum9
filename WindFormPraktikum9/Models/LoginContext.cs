@@ -21,17 +21,12 @@ namespace WindFormPraktikum9.Models
         public bool Login(string username, string password)
         {
             string query = $"SELECT * FROM users WHERE username = @username AND password = @password";
-            using (var cmd = new NpgsqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
+            using var cmd = new NpgsqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
 
-                if (cmd.Parameters.Count > 0)
-                {
-                    return true;
-                }
-                return false;
-            }
+            using var reader = cmd.ExecuteReader();
+            return reader.Read();
         }
     }
 }

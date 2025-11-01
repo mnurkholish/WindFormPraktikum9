@@ -33,6 +33,10 @@ namespace WindFormPraktikum9
                 {
                     MessageBox.Show("Anda Berhasil Login", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                else
+                {
+                    MessageBox.Show($"Gagal Login", "Gagal", MessageBoxButtons.OK);
+                }
             }
             catch (Exception ex)
             {
@@ -79,33 +83,5 @@ namespace WindFormPraktikum9
             //    MessageBox.Show($"{err}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
         }
-    }
-}
-
-public class DatabaseLogin
-{
-    NpgsqlConnection conn;
-
-    public DatabaseLogin()
-    {
-        //string env = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-        string env = "Host=localhost;Port=5432;Database=praktikum-pbo;Username=postgres;Password=Kholish8306!";
-        conn = new NpgsqlConnection(env);
-        conn.Open();
-    }
-
-    public bool Login(string username, string password)
-    {
-        string query = "SELECT * FROM users WHERE username=@username AND password=@password";
-        NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-        cmd.Parameters.AddWithValue("@username", username);
-        cmd.Parameters.AddWithValue("@password", password);
-        var reader = cmd.ExecuteReader();
-        var userExist = reader.Read();
-
-        reader.Close();
-        cmd.Dispose();
-
-        return userExist;
     }
 }
